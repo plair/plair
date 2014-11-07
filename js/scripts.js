@@ -1,4 +1,4 @@
-var videoList = ["tADtj3idaQ8", "AsGbETlosPo", "TqARD0rNHqY", "O0cihXmhbjs", "jAv_P2Z-5LU"]
+var videoList = ["tADtj3idaQ8", "AsGbETlosPo", "TqARD0rNHqY", "O0cihXmhbjs", "jAv_P2Z-5LU", "6EWIawHfMZM", "3XdT2ZEC3Go", "jkPAeOpLSrI"];
 
 var videoInfo = {};
 

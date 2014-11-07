@@ -1,18 +1,54 @@
-var videos = ["tADtj3idaQ8", "AsGbETlosPo", "TqARD0rNHqY", "O0cihXmhbjs", "jAv_P2Z-5LU"]
+var videoList = ["tADtj3idaQ8", "AsGbETlosPo", "TqARD0rNHqY", "O0cihXmhbjs", "jAv_P2Z-5LU"]
+
+var videoInfo = {};
 
 function renderVideoObjects(vidArray, el){
   var i,
       html;
 
+  // http://gdata.youtube.com/feeds/api/videos/UjoE2jNAD7U
+
   for(i=0; i<vidArray.length; i++){
-
-    el.append
+    html = "<li class='youtube-item' data-youtube='" + vidArray[i] + "'></li>"
+    el.append(html);
   }
-
+  $('li[data-youtube="' + videoList[0] + '"]').addClass("currentVid");
 
 }
 
-renderVideoObjects(videos, $('ul.video-list'));
+function labelVideoObjects(vidArray){
+  var i,
+      songInfo;
+
+  for(i=0; i<vidArray.length; i++){
+    $.ajax({
+      url: "http://gdata.youtube.com/feeds/api/videos/" + vidArray[i],
+      context: document.body,
+      success: function(result){
+        songInfo = $(result).find('title').eq(0).text();
+        videoInfo[vidArray[i]] = songInfo;
+        console.log(videoInfo);
+      }
+    });
+  }
+
+}
+
+
+
+
+// add regex
+$('form#addVideo input[type="submit"]').click(function(e){
+  e.preventDefault();
+  var videoCode = $('form#addVideo input[name="linkcode"]').val();
+  $('ul.video-list').append("<li class='youtube-item' data-youtube='" + videoCode + "'></li>")
+
+  $('form#addVideo input[name="linkcode"]').val('');
+});
+
+renderVideoObjects(videoList, $('ul.video-list'));
+
+// labelVideoObjects(videoList);
 
 // 2. This code loads the IFrame Player API code asynchronously.
       var tag = document.createElement('script');
@@ -28,7 +64,7 @@ renderVideoObjects(videos, $('ul.video-list'));
         player = new YT.Player('player', {
           height: '390',
           width: '640',
-          videoId: 'M7lc1UVf-VE',
+          videoId: videoList[0],
           playlist: ['sW_ePQRvrKI','UjoE2jNAD7U'],
           events: {
             'onReady': onPlayerReady,
@@ -38,9 +74,23 @@ renderVideoObjects(videos, $('ul.video-list'));
 
       }
 
+      function onSongChange(event){
+        var currentVid = $('li.currentVid');
+
+      }
+
 
       // 4. The API will call this function when the video player is ready.
       function onPlayerReady(event) {
+
+          $('li.youtube-item').click(function(){
+            var currentVid = $('li.currentVid');
+            var nextCode = $(this).data("youtube");
+            $(this).addClass("currentVid");
+            currentVid.removeClass("currentVid");
+            event.target.cueVideoById({videoId: nextCode});
+            event.target.playVideo();
+          });
         // event.target.playVideo();
       }
 
@@ -51,7 +101,11 @@ renderVideoObjects(videos, $('ul.video-list'));
       function onPlayerStateChange(event) {
         console.log("playerState", player.getPlayerState());
         if(player.getPlayerState() === 0){
-          event.target.cueVideoById({videoId:'NyfwImwoE3w'});
+          var currentVid = $('li.currentVid');
+          var nextCode = currentVid.next().data("youtube");
+          event.target.cueVideoById({videoId: nextCode});
+          currentVid.next().addClass("currentVid");
+          currentVid.removeClass("currentVid");
           event.target.playVideo();
         }
 

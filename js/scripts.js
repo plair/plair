@@ -91,6 +91,24 @@ renderVideoObjects(videoList, $('ul.video-list'));
             event.target.cueVideoById({videoId: nextCode});
             event.target.playVideo();
           });
+
+          $('button.next').click(function(){
+            var currentVid = $('li.currentVid');
+            var nextCode = currentVid.next().data("youtube");
+            event.target.cueVideoById({videoId: nextCode});
+            currentVid.next().addClass("currentVid");
+            currentVid.removeClass("currentVid");
+            event.target.playVideo();
+          });
+
+          $('button.prev').click(function(){
+            var currentVid = $('li.currentVid');
+            var nextCode = currentVid.prev().data("youtube");
+            event.target.cueVideoById({videoId: nextCode});
+            currentVid.prev().addClass("currentVid");
+            currentVid.removeClass("currentVid");
+            event.target.playVideo();
+          });
         // event.target.playVideo();
       }
 

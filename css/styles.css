@@ -26,3 +26,11 @@ form#addVideo input{
 .currentVid{
   background: #2980b9;
 }
+
+.next{
+  /*float: right;*/
+}
+
+.prev{
+  float: left;
+}

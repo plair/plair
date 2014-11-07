@@ -40,7 +40,7 @@ function labelVideoObjects(vidArray){
 // add regex
 $('form#addVideo input[type="submit"]').click(function(e){
   e.preventDefault();
-  var videoCode = $('form#addVideo input[name="linkcode"]').val();
+  var videoCode = $('form#addVideo input[name="linkcode"]').val().split('=')[1];
   $('ul.video-list').append("<li class='youtube-item' data-youtube='" + videoCode + "'></li>")
 
   $('form#addVideo input[name="linkcode"]').val('');

@@ -1,0 +1,40 @@
+var YoutubeVideo = Backbone.Model.extend({
+  defaults: {
+    title: "",
+    youtubeCode: "",
+  },
+  initialize: function(){
+    var self = this;
+    $.ajax({
+      url: "http://gdata.youtube.com/feeds/api/videos/" + this.get('youtubeCode'),
+      success: function(result){
+            self.set('title', $(result).find('title').eq(0).text());
+        }
+    });
+  }
+});
+
+
+
+var YoutubeVideoView = Backbone.View.extend({
+
+  template: _.template($("#youtubeTemplate").html()),
+  initialize: function(){
+    this.render();
+  },
+  render: function(){
+    // console.log("this.template", this.template(this.model.toJSON()));
+
+    // console.log("this.model",this.model.toJSON());
+    // console.log("this.el.html", this.$el.html);
+    return this.template(this.model.toJSON());
+    // console.log(this.$el.html(this.template(this.model)));
+  }
+
+});
+
+var vidiot = new YoutubeVideo({youtubeCode:"tADtj3idaQ8"});
+var view = new YoutubeVideoView({model: vidiot});
+
+var publicationView = new PublicationView({model: publication})
+self.$el.append( view.render().el );

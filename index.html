@@ -7,6 +7,9 @@
     <title></title>
     <!-- <link rel="stylesheet" href="css/normalize.css"> -->
     <link rel="stylesheet" href="css/styles.css">
+    <script id="youtubeTemplate" type="text/template">
+      <li class='youtube-item' data-youtube=<%= youtubeCode %>><p><%= title %></p></li>
+    </script>
 </head>
   <body>
     <div class="container">
@@ -20,8 +23,9 @@
       <ul class="video-list">
       </ul>
     </div>
-
     <script src="libs/jquery-2.1.1.min.js"></script>
+    <script src="libs/underscore.js"></script>
+    <script src="libs/backbone.js"></script>
     <script src="js/scripts.js"></script>
   </body>
 </html>

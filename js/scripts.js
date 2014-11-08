@@ -1,40 +1,60 @@
-var videoList = ["tADtj3idaQ8", "AsGbETlosPo", "TqARD0rNHqY", "O0cihXmhbjs", "jAv_P2Z-5LU", "6EWIawHfMZM", "3XdT2ZEC3Go", "jkPAeOpLSrI"];
+var videoList = ["tADtj3idaQ8", "AsGbETlosPo", "TqARD0rNHqY", "O0cihXmhbjs", "jAv_P2Z-5LU", "6EWIawHfMZM", "3XdT2ZEC3Go", "jkPAeOpLSrI", "0xxWBigyovY", "rtodyi12q-4", "98nUZ938oiU", "s_u6RCIfe80", "lup_mAtL7zY", "QbjLa9vbZe0", "HohnlWnQPvs", "nk4P03R3Hts", "3yn0PISCGpg", "X1h26SvybDw"];
 
-var videoInfo = {};
-
-function renderVideoObjects(vidArray, el){
-  var i,
-      html;
-
-  // http://gdata.youtube.com/feeds/api/videos/UjoE2jNAD7U
-
-  for(i=0; i<vidArray.length; i++){
-    html = "<li class='youtube-item' data-youtube='" + vidArray[i] + "'></li>"
-    el.append(html);
-  }
-  $('li[data-youtube="' + videoList[0] + '"]').addClass("currentVid");
-
-}
-
-function labelVideoObjects(vidArray){
-  var i,
-      songInfo;
-
-  for(i=0; i<vidArray.length; i++){
+var YoutubeVideo = Backbone.Model.extend({
+  defaults: {
+    title: "",
+    youtubeCode: "",
+  },
+  initialize: function(){
+    var self = this;
     $.ajax({
-      url: "http://gdata.youtube.com/feeds/api/videos/" + vidArray[i],
-      context: document.body,
+      url: "http://gdata.youtube.com/feeds/api/videos/" + this.get('youtubeCode'),
       success: function(result){
-        songInfo = $(result).find('title').eq(0).text();
-        videoInfo[vidArray[i]] = songInfo;
-        console.log(videoInfo);
-      }
+            self.set('title', $(result).find('title').eq(0).text());
+        }
     });
   }
+});
 
+
+
+var YoutubeVideoView = Backbone.View.extend({
+
+  template: _.template($("#youtubeTemplate").html()),
+  initialize: function(){
+    this.render();
+  },
+  render: function(){
+    // console.log("this.template", this.template(this.model.toJSON()));
+
+    // console.log("this.model",this.model.toJSON());
+    // console.log("this.el.html", this.$el.html);
+    return this.template(this.model.toJSON());
+    // console.log(this.$el.html(this.template(this.model)));
+  }
+
+});
+
+function renderVideoObjects(vidArray, pageElement){
+  var i;
+  for(i=0; i<vidArray.length; i++){
+    var vid = new YoutubeVideo({youtubeCode: vidArray[i]});
+    var view = new YoutubeVideoView({model: vid});
+    pageElement.append(view.render());
+  }
+  $('li[data-youtube="' + videoList[0] + '"]').addClass("currentVid");
+};
+
+function listenNewItem(){
+  $('li.youtube-item').click(function(){
+      var currentVid = $('li.currentVid');
+      var nextCode = $(this).data("youtube");
+      $(this).addClass("currentVid");
+      currentVid.removeClass("currentVid");
+      player.cueVideoById({videoId: nextCode});
+      player.playVideo();
+  });
 }
-
-
 
 
 // add regex
@@ -44,6 +64,7 @@ $('form#addVideo input[type="submit"]').click(function(e){
   $('ul.video-list').append("<li class='youtube-item' data-youtube='" + videoCode + "'></li>")
 
   $('form#addVideo input[name="linkcode"]').val('');
+  listenNewItem();
 });
 
 renderVideoObjects(videoList, $('ul.video-list'));
@@ -52,6 +73,12 @@ renderVideoObjects(videoList, $('ul.video-list'));
 
 // 2. This code loads the IFrame Player API code asynchronously.
       var tag = document.createElement('script');
+
+      if (player != null) {
+          player.destroy();
+          player = null;
+      }
+
 
       tag.src = "https://www.youtube.com/iframe_api";
       var firstScriptTag = document.getElementsByTagName('script')[0];
@@ -84,6 +111,7 @@ renderVideoObjects(videoList, $('ul.video-list'));
       function onPlayerReady(event) {
 
           $('li.youtube-item').click(function(){
+            onYouTubeIframeAPIReady();
             var currentVid = $('li.currentVid');
             var nextCode = $(this).data("youtube");
             $(this).addClass("currentVid");
@@ -117,7 +145,6 @@ renderVideoObjects(videoList, $('ul.video-list'));
       //    the player should play for six seconds and then stop.
       var done = false;
       function onPlayerStateChange(event) {
-        console.log("playerState", player.getPlayerState());
         if(player.getPlayerState() === 0){
           var currentVid = $('li.currentVid');
           var nextCode = currentVid.next().data("youtube");
@@ -133,3 +160,4 @@ renderVideoObjects(videoList, $('ul.video-list'));
       function stopVideo() {
         player.stopVideo();
       }
+

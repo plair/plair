@@ -21,8 +21,13 @@ var YoutubeVideo = Backbone.Model.extend({
 var YoutubeVideoView = Backbone.View.extend({
 
   template: _.template($("#youtubeTemplate").html()),
+  events: {
+      "click button.removeTrack"  : "removeTrack"
+  },
   initialize: function(){
     this.render();
+    this.listenTo(this.model, 'change', this.render);
+    this.listenTo(this.model, 'destroy', this.remove);
   },
   render: function(){
     // console.log("this.template", this.template(this.model.toJSON()));
@@ -31,9 +36,14 @@ var YoutubeVideoView = Backbone.View.extend({
     // console.log("this.el.html", this.$el.html);
     return this.template(this.model.toJSON());
     // console.log(this.$el.html(this.template(this.model)));
+  },
+  removeTrack: function(){
+    console.log("parent", $this.parent());
+    this.model.destroy();
   }
-
 });
+
+// you need to create a collection for the titles to come in correctly
 
 function renderVideoObjects(vidArray, pageElement){
   var i;
@@ -43,6 +53,12 @@ function renderVideoObjects(vidArray, pageElement){
     pageElement.append(view.render());
   }
   $('li[data-youtube="' + videoList[0] + '"]').addClass("currentVid");
+  $('button.removeTrack').click(function(e){
+    e.stopPropagation();
+    console.log("clicked");
+    $(this).parent().remove();
+    console.log($(this).parent());
+  })
 };
 
 function listenNewItem(){

@@ -1,4 +1,4 @@
-var videoList = ["-q5nFR-EW7U", "tADtj3idaQ8", "AsGbETlosPo", "TqARD0rNHqY", "O0cihXmhbjs", "jAv_P2Z-5LU", "6EWIawHfMZM", "3XdT2ZEC3Go", "jkPAeOpLSrI", "0xxWBigyovY", "rtodyi12q-4", "98nUZ938oiU", "s_u6RCIfe80", "lup_mAtL7zY", "QbjLa9vbZe0", "HohnlWnQPvs", "nk4P03R3Hts", "3yn0PISCGpg", "X1h26SvybDw"];
+var videoList = ["7O_l7O4PpDI", "-q5nFR-EW7U", "tADtj3idaQ8", "AsGbETlosPo", "TqARD0rNHqY", "O0cihXmhbjs", "jAv_P2Z-5LU", "6EWIawHfMZM", "3XdT2ZEC3Go", "jkPAeOpLSrI", "0xxWBigyovY", "rtodyi12q-4", "98nUZ938oiU", "s_u6RCIfe80", "lup_mAtL7zY", "QbjLa9vbZe0", "HohnlWnQPvs", "nk4P03R3Hts", "3yn0PISCGpg", "X1h26SvybDw"];
 
 var YoutubeVideo = Backbone.Model.extend({
   defaults: {
@@ -77,7 +77,7 @@ function listenNewItem(){
 $('form#addVideo input[type="submit"]').click(function(e){
   e.preventDefault();
   var videoCode = $('form#addVideo input[name="linkcode"]').val().split('=')[1];
-  $('ul.video-list').append("<li class='youtube-item' data-youtube='" + videoCode + "'></li>")
+  $('ul.video-list').append("<li class='youtube-item' data-youtube='" + videoCode + "'><button class="removeTrack">X</a></button></li>")
 
   $('form#addVideo input[name="linkcode"]').val('');
   listenNewItem();

@@ -1,4 +1,4 @@
-var videoList = ["tADtj3idaQ8", "AsGbETlosPo", "TqARD0rNHqY", "O0cihXmhbjs", "jAv_P2Z-5LU", "6EWIawHfMZM", "3XdT2ZEC3Go", "jkPAeOpLSrI", "0xxWBigyovY", "rtodyi12q-4", "98nUZ938oiU", "s_u6RCIfe80", "lup_mAtL7zY", "QbjLa9vbZe0", "HohnlWnQPvs", "nk4P03R3Hts", "3yn0PISCGpg", "X1h26SvybDw"];
+var videoList = ["-q5nFR-EW7U", "tADtj3idaQ8", "AsGbETlosPo", "TqARD0rNHqY", "O0cihXmhbjs", "jAv_P2Z-5LU", "6EWIawHfMZM", "3XdT2ZEC3Go", "jkPAeOpLSrI", "0xxWBigyovY", "rtodyi12q-4", "98nUZ938oiU", "s_u6RCIfe80", "lup_mAtL7zY", "QbjLa9vbZe0", "HohnlWnQPvs", "nk4P03R3Hts", "3yn0PISCGpg", "X1h26SvybDw"];
 
 var YoutubeVideo = Backbone.Model.extend({
   defaults: {
@@ -90,10 +90,10 @@ renderVideoObjects(videoList, $('ul.video-list'));
 // 2. This code loads the IFrame Player API code asynchronously.
       var tag = document.createElement('script');
 
-      if (player != null) {
-          player.destroy();
-          player = null;
-      }
+      // if (player != null) {
+      //     player.destroy();
+      //     player = null;
+      // }
 
 
       tag.src = "https://www.youtube.com/iframe_api";
@@ -117,17 +117,11 @@ renderVideoObjects(videoList, $('ul.video-list'));
 
       }
 
-      function onSongChange(event){
-        var currentVid = $('li.currentVid');
-
-      }
-
-
       // 4. The API will call this function when the video player is ready.
       function onPlayerReady(event) {
 
           $('li.youtube-item').click(function(){
-            onYouTubeIframeAPIReady();
+            // onYouTubeIframeAPIReady();
             var currentVid = $('li.currentVid');
             var nextCode = $(this).data("youtube");
             $(this).addClass("currentVid");
@@ -160,6 +154,7 @@ renderVideoObjects(videoList, $('ul.video-list'));
       //    The function indicates that when playing a video (state=1),
       //    the player should play for six seconds and then stop.
       var done = false;
+
       function onPlayerStateChange(event) {
         if(player.getPlayerState() === 0){
           var currentVid = $('li.currentVid');
